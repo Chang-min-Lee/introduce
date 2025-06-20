@@ -1,0 +1,54 @@
+import streamlit as st
+from openai import OpenAI
+
+# 💡 OpenAI API 키 설정
+client = OpenAI(api_key="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")
+
+# 🎨 페이지 설정
+st.set_page_config(page_title="AI 자기소개서 생성기", page_icon="📝", layout="centered")
+
+# 💫 상단 제목
+st.markdown("""
+    <h1 style='text-align: center; color: #4A90E2;'>✨ AI 자기소개서 생성기 ✨</h1>
+    <p style='text-align: center; font-size: 18px; color: #555;'>
+        지원 정보를 입력하면, 인공지능이 멋진 자기소개서를 문단별로 작성해줍니다.
+    </p>
+    <hr style='margin-top: 20px; margin-bottom: 30px;'>
+""", unsafe_allow_html=True)
+
+# 📥 입력 폼
+job = st.text_input("📌 지원 직무를 입력하세요:")
+strength = st.text_input("💪 나의 강점을 입력하세요:")
+experience = st.text_area("📝 경험을 간단히 설명해 주세요:")
+
+# ✨ 생성 버튼
+if st.button("🚀 자기소개서 생성하기"):
+    with st.spinner("AI가 글을 쓰고 있어요..."):
+        prompt = f"""
+        다음 정보를 바탕으로 자기소개서를 작성해줘.
+        문단은 다음 항목 순서로 구성해줘:
+        1. 성장 과정
+        2. 성격의 장단점
+        3. 지원 동기
+        4. 입사 후 포부
+
+        요청사항:
+        - 각 문단은 5~6줄 이상으로 상세하게 작성해줘.
+        - "저는", "저의", "제가", "제"로 시작하지 않도록 다양한 표현 사용해줘.
+        - 자연스럽고 구체적인 예시를 포함해줘.
+
+        지원 직무: {job}
+        강점: {strength}
+        경험: {experience}
+        """
+
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        result = response.choices[0].message.content
+
+        # 🎉 결과 출력
+        st.markdown("## 📝 생성된 자기소개서")
+        st.markdown(f"<div style='background-color: #f9f9f9; padding: 20px; border-radius: 8px; line-height: 1.6;'>{result}</div>", unsafe_allow_html=True)
