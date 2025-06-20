@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 
 # ✅ OpenAI API 키는 st.secrets로 불러오기 (Streamlit Cloud에서 설정)
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(api_key=st.secrets["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"])
 
 # 🎨 페이지 설정
 st.set_page_config(page_title="AI 자기소개서 생성기", page_icon="📝", layout="centered")
